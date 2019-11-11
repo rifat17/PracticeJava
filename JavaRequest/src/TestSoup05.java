@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+
+import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 
-public class TestSoup04  {
+public class TestSoup05   {
 
+	public ArrayList<aSinglePeriod> ap;
 	
  	
 	public static void main(String[] args){
@@ -36,12 +39,15 @@ public class TestSoup04  {
 //			System.out.println(dayList.get(e));
 //		}
 		
-		aDayRoutine dayRoutine = new aDayRoutine();
 		
 		final String url = 
 				"http://routine.baiust.edu.bd/?department_id=1&semester=12";
 		try {
-			Document doc = Jsoup.connect(url).get();
+			Document doc = Jsoup.connect(url)
+					.userAgent("Mozilla/5.0 (X11; Linux x86_64; rv:69.0) Gecko/20100101 Firefox/69.0")
+					.method(Method.GET)
+					.timeout(5000)
+					.get();
 			
 			for(int i = 1; i <= 10; i++ ) {
 				
@@ -52,14 +58,12 @@ public class TestSoup04  {
 			}
 //			System.out.println(dayTime);
 			
+			//scraping start here
 			
 			for(String key : dayColor.keySet()) {
 				
-				ArrayList<aSinglePeriod> aspList = new ArrayList<aSinglePeriod>();
-				
-//				System.out.println(key);
-//				System.out.println(dayColor.get(key));
 				String aDayColorValue = dayColor.get(key);
+				System.out.println(key);
 			
 				for(int i = 1; i <= 10; i++) {
 					
@@ -73,17 +77,12 @@ public class TestSoup04  {
 								doc.select("." + aDayColorValue +" > td:nth-of-type("+ i +")").text().equals("Launch")) {
 							
 							//check why empty,is it  OFFclass or Lunch time
+							
 							if( i != 5 || i != 9) { //5th and 9th period is lunch time
-//								System.out.println("NoClass");
-								aSinglePeriod asp = new aSinglePeriod(false);
-//								System.out.println(asp);
-								aspList.add(asp);
+									//field is empty and not lunch time,that means classOff in this period :) 
 							}
 							else {
-//								System.out.println("LunchTime");
-								aSinglePeriod asp = new aSinglePeriod(false);
-//								System.out.println(asp);
-								aspList.add(asp);
+									// Lunch Time
 							}
 						}
 						
@@ -93,19 +92,16 @@ public class TestSoup04  {
 							String teachersName = doc.select("." + aDayColorValue +" > td:nth-of-type("+ i +") > div > p:nth-of-type(2) > span:nth-of-type(1)").text();
 							String classRoomNo = doc.select("." + aDayColorValue +" > td:nth-of-type("+ i +") > div > p:nth-of-type(2) > span:nth-of-type(2)").text();
 							String sectionValue = doc.select("." + aDayColorValue +" > td:nth-of-type("+ i +") > div > p:nth-of-type(3)").text();
+//																		td:nth-of-type(4) > div > p:nth-of-type(3)
 							String classTime = dayTime.get(i);
 //							System.out.println(sectionValue);
 							aSinglePeriod asp = new aSinglePeriod(courseCode, teachersName, classRoomNo, classTime, sectionValue,true);
-//							System.out.println(asp);
-							aspList.add(asp);
+							System.out.println(asp);
 							
 							
 						}
 					}
 				}
-//				System.out.println();
-				
-				dayRoutine.add(key, aspList);
 				
 //				
 		}
@@ -116,15 +112,6 @@ public class TestSoup04  {
 			System.out.println("Error");
 			System.out.println(e.getMessage());
 		}
-		
-//		System.out.println(dayRoutine.get("SUN"));
-		
-		String day = "SUN";
-		int period = 2;
-		System.out.println(dayRoutine.get(day).get(period).getCourseCode() + " at " +dayRoutine.get(day).get(period).getClassRoomNo() +" By "+ dayRoutine.get(day).get(period).getTeachersName());
-		System.out.println(dayRoutine.get(day).get(period).getClassTime());
-		System.out.println(dayRoutine.get(day).get(period).getSectionValue());
-		
 	}
 	
 	

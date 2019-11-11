@@ -1,34 +1,31 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class aDayRoutine {
-	public ArrayList<aSinglePeriod> aDayRoutineList;
+	
+	LinkedHashMap<String,ArrayList<aSinglePeriod> > aDayRoutineList;
 
-	
-	
-	public aDayRoutine(ArrayList<aSinglePeriod> aDayRoutineList) {
+	public aDayRoutine() {
 		super();
-		this.aDayRoutineList = aDayRoutineList;
+		aDayRoutineList = new LinkedHashMap<String,ArrayList<aSinglePeriod> >();
 	}
-
 	
-	public ArrayList<aSinglePeriod> getaDayRoutineList() {
-		return aDayRoutineList;
+	public void add(String key, ArrayList<aSinglePeriod> value) {
+		aDayRoutineList.put(key, value);
 	}
 
-
-	public void setaDayRoutineList(ArrayList<aSinglePeriod> aDayRoutineList) {
-		this.aDayRoutineList = aDayRoutineList;
-	}
-
-	
 	@Override
 	public String toString() {
 		return "aDayRoutine [aDayRoutineList=" + aDayRoutineList + "]";
 	}
-
-
-	public void addToDayRoutine(aSinglePeriod asingleperiod) {
-		aDayRoutineList.add(asingleperiod);		
+	
+	public ArrayList<aSinglePeriod> get(String key) {
+		return aDayRoutineList.get(key);
+		
 	}
+	
+	
+	
+
 }
 
